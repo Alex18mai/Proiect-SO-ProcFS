@@ -1,0 +1,36 @@
+MASTER:
+nano /sys/kern/syscalls.master
+cd /sys/kern/
+make syscalls
+
+GENERIC:
+nano /sys/kern/sys_generic.c
+
+RECOMPILE KERN:
+cd /sys/arch/amd64/compile/GENERIC.MP
+make
+make install
+reboot
+
+
+PROC FS:
+#TODO BEFORE: delete proc, test_imagine
+
+#rulare
+gcc -o ProcFS ProcFS.c
+./ProcFS
+
+#facut imagine
+makefs proc_imagine /home/proc
+
+#facut legatura intre discul vnd0 si imagine
+vnconfig vnd0 /home/proc_imagine
+
+#montam discul in /mnt
+mount /dev/vnd0c /mnt
+
+#dam unmount din /mnt
+umount /mnt
+
+#stergem legatura intre discul vnd0 si imagine
+vnconfig -u vnd0
